@@ -126,6 +126,24 @@ const CONFIG = {
 				dest : 'build/twine2/sugarcube-2/LICENSE'
 			}
 		]
+	},
+	twineyard : {
+		build : {
+			src  : 'src/templates/twineyard/html.tpl',
+			dest : 'build/twineyard/sugarcube-2/format.js',
+			json : 'src/templates/twineyard/config.json',
+			echo : true,
+		},
+		copy : [
+			{
+				src  : 'icon.svg',
+				dest : 'build/twineyard/sugarcube-2/icon.svg'
+			},
+			{
+				src  : 'LICENSE',
+				dest : 'build/twineyard/sugarcube-2/LICENSE'
+			}
+		]
 	}
 };
 
@@ -147,6 +165,7 @@ const _path = require('path');
 const _indent = ' -> ';
 const _opt    = require('node-getopt').create([
 	['b', 'build=VERSION', 'Build only for Twine major version: 1 or 2; default: build for all.'],
+	['e', 'echo', 'Echo the built file into the console'],
 	['d', 'debug',         'Keep debugging code; gated by DEBUG symbol.'],
 	['u', 'unminified',    'Suppress minification stages.'],
 	['6', 'es6',           'Suppress JavaScript transpilation stages.'],
@@ -162,16 +181,24 @@ if (_opt.options.es6 && !_opt.options.unminified) {
 
 let _buildForTwine1 = true;
 let _buildForTwine2 = true;
+let _buildForTwineyard = true;
 
 // build selection
 if (_opt.options.build) {
 	switch (_opt.options.build) {
 	case '1':
 		_buildForTwine2 = false;
+		_buildForTwineyard = false;
 		break;
 
 	case '2':
 		_buildForTwine1 = false;
+		_buildForTwineyard = false;
+		break;
+
+	case 'twineyard':
+		_buildForTwine1 = false;
+		_buildForTwine2 = false;
 		break;
 
 	default:
@@ -265,6 +292,43 @@ if (_opt.options.build) {
 		projectCopy(CONFIG.twine2.copy);
 	}
 
+	// Build for Twineyard
+	if (_buildForTwineyard && CONFIG.twineyard) {
+		log('\nBuilding Twineyard version:');
+
+		// Process the story format templates and write the outfiles.
+		projectBuild({
+			build     : CONFIG.twineyard.build,
+			version   : version, // eslint-disable-line object-shorthand
+			libSource : assembleLibraries(CONFIG.libs),                   // combine the libraries
+			appSource : compileJavaScript(CONFIG.js, { twine1 : false }), // combine and minify the app JS
+			cssSource : compileStyles(CONFIG.css),                        // combine and minify the app CSS
+
+			postProcess(sourceString) {
+				// Load the output format.
+				let output = require(`./${_path.normalize(this.build.json)}`); // relative path must be prefixed ('./')
+
+				// Merge data into the output format.
+				output = Object.assign(output, {
+					description : output.description.replace(
+						/(['"`])\{\{BUILD_VERSION_MAJOR\}\}\1/g,
+						() => this.version.major
+					),
+					version : this.version.toString(),
+					source  : sourceString
+				});
+
+				// Wrap the output in the `storyFormat()` function.
+				output = JSON.stringify(output);
+
+				return output;
+			}
+		});
+
+		// Process the files that simply need copied into the build.
+		projectCopy(CONFIG.twineyard.copy);
+	}
+
 	// Update the build ID.
 	writeFileContents('.build', version.build);
 })();
@@ -277,6 +341,9 @@ console.log('\nBuilds complete!  (check the "build" directory)');
 	Utility Functions
 *******************************************************************************/
 function log(message, indent) {
+	if(_opt.options.hasOwnProperty('echo')){
+		return;
+	}
 	console.log('%s%s', indent ? indent : _indent, message);
 }
 
@@ -492,6 +559,10 @@ function projectBuild(project) {
 	// Post-process hook.
 	if (typeof project.postProcess === 'function') {
 		output = project.postProcess(output);
+	}
+
+	if(_opt.options.hasOwnProperty('echo')){
+		return;
 	}
 
 	// Write the outfile.

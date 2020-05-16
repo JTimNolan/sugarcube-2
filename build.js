@@ -209,7 +209,7 @@ if (_opt.options.build) {
 
 // build the project
 (() => {
-	console.log('Starting builds...');
+	log('Starting builds...');
 
 	// Create the build ID file, if nonexistent.
 	if (!_fs.existsSync('.build')) {
@@ -240,7 +240,7 @@ if (_opt.options.build) {
 
 	// Build for Twine 1.x.
 	if (_buildForTwine1 && CONFIG.twine1) {
-		console.log('\nBuilding Twine 1.x version:');
+		log('\nBuilding Twine 1.x version:');
 
 		// Process the header templates and write the outfiles.
 		projectBuild({
@@ -257,7 +257,7 @@ if (_opt.options.build) {
 
 	// Build for Twine 2.x.
 	if (_buildForTwine2 && CONFIG.twine2) {
-		console.log('\nBuilding Twine 2.x version:');
+		log('\nBuilding Twine 2.x version:');
 
 		// Process the story format templates and write the outfiles.
 		projectBuild({
@@ -334,7 +334,7 @@ if (_opt.options.build) {
 })();
 
 // That's all folks!
-console.log('\nBuilds complete!  (check the "build" directory)');
+log('\nBuilds complete!  (check the "build" directory)');
 
 
 /*******************************************************************************
@@ -562,7 +562,7 @@ function projectBuild(project) {
 	}
 
 	if(_opt.options.hasOwnProperty('echo')){
-		return;
+		console.log(output);
 	}
 
 	// Write the outfile.

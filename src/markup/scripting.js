@@ -191,7 +191,7 @@ var Scripting = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		function tick() {
 			progress += increment;
-			window.scroll(0, start + direction * (distance * Math.easeInOut(progress)));
+			window.scroll && window.scroll(0, start + direction * (distance * Math.easeInOut(progress)));
 
 			if (progress >= 1) {
 				window.clearInterval(intervalId);

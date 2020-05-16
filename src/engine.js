@@ -246,7 +246,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 			rather than only for the currently set starting passage, since the starting passage
 			may be dynamically manipulated.
 		*/
-		window.scroll && window.scroll(0, 0);
+		window.scroll(0, 0);
 
 		/*
 			Delete the active session.
@@ -560,7 +560,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		// Scroll the window to the top.
-		window.scroll && window.scroll(0, 0);
+		window.scroll(0, 0);
 
 		// Update the engine state.
 		_state = States.Playing;

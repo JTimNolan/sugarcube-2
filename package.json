@@ -19,6 +19,9 @@
     "semver": "^5.7.1",
     "uglify-js": "^2.8.29"
   },
+  "scripts": {
+    "postinstall": "cd node_modules/sugarcube-2 && npm install"
+  },
   "engine": {
     "node": ">=12.16.1"
   },

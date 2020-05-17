@@ -517,7 +517,8 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 	/*******************************************************************************************************************
 		Module Exports.
 	*******************************************************************************************************************/
-	return Object.freeze(Object.defineProperties({}, {
+	const enumerable = true;
+	return Object.defineProperties({}, {
 		// Story Functions.
 		load  : { value : storyLoad },
 		init  : { value : storyInit },
@@ -534,6 +535,9 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 		getAllStylesheet : { value : passagesGetAllStylesheet },
 		getAllWidget     : { value : passagesGetAllWidget },
 		lookup           : { value : passagesLookup },
-		lookupWith       : { value : passagesLookupWith }
-	}));
+		lookupWith       : { value : passagesLookupWith },
+
+		// Twineyard Mods
+		passages: { value: _passages, enumerable },
+	});
 })();

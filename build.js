@@ -179,26 +179,23 @@ if (_opt.options.es6 && !_opt.options.unminified) {
 	_opt.options.unminified = true;
 }
 
-let _buildForTwine1 = true;
-let _buildForTwine2 = true;
-let _buildForTwineyard = true;
+let _buildForTwine1 = false;
+let _buildForTwine2 = false;
+let _buildForTwineyard = false;
 
 // build selection
 if (_opt.options.build) {
 	switch (_opt.options.build) {
 	case '1':
-		_buildForTwine2 = false;
-		_buildForTwineyard = false;
+		_buildForTwine1 = true;
 		break;
 
 	case '2':
-		_buildForTwine1 = false;
-		_buildForTwineyard = false;
+		_buildForTwine2 = true;
 		break;
 
 	case 'twineyard':
-		_buildForTwine1 = false;
-		_buildForTwine2 = false;
+		_buildForTwineyard = true;
 		break;
 
 	default:

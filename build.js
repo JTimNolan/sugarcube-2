@@ -321,44 +321,6 @@ if (_opt.options.build) {
 	}
 
 	// Build for Twineyard
-	if (_buildForTwineyardClient) {
-		log('\nBuilding Twineyard client version:');
-		CONFIG.js.main.splice(-1, 0, 'src/client.js');
-
-		// Process the story format templates and write the outfiles.
-		projectBuild({
-			build     : CONFIG.twineyardclient.build,
-			version   : version, // eslint-disable-line object-shorthand
-			libSource : assembleLibraries(CONFIG.libs),                   // combine the libraries
-			appSource : compileJavaScript(CONFIG.js, { twine1 : false }), // combine and minify the app JS
-			cssSource : compileStyles(CONFIG.css),                        // combine and minify the app CSS
-
-			postProcess(sourceString) {
-				// Load the output format.
-				let output = require(`./${_path.normalize(this.build.json)}`); // relative path must be prefixed ('./')
-
-				// Merge data into the output format.
-				output = Object.assign(output, {
-					description : output.description.replace(
-						/(['"`])\{\{BUILD_VERSION_MAJOR\}\}\1/g,
-						() => this.version.major
-					),
-					version : this.version.toString(),
-					source  : sourceString
-				});
-
-				// Wrap the output in the `storyFormat()` function.
-				output = JSON.stringify(output);
-
-				return output;
-			}
-		});
-
-		// Process the files that simply need copied into the build.
-		projectCopy(CONFIG.twineyardclient.copy);
-	}
-
-	// Build for Twineyard
 	if (_buildForTwineyardServer) {
 		log('\nBuilding Twineyard server version:');
 
@@ -393,6 +355,44 @@ if (_opt.options.build) {
 
 		// Process the files that simply need copied into the build.
 		projectCopy(CONFIG.twineyardserver.copy);
+	}
+
+	// Build for Twineyard
+	if (_buildForTwineyardClient) {
+		log('\nBuilding Twineyard client version:');
+		CONFIG.js.main.splice(-1, 0, 'src/client.js'); // TODO: Don't add this directly, as it modifies for others
+
+		// Process the story format templates and write the outfiles.
+		projectBuild({
+			build     : CONFIG.twineyardclient.build,
+			version   : version, // eslint-disable-line object-shorthand
+			libSource : assembleLibraries(CONFIG.libs),                   // combine the libraries
+			appSource : compileJavaScript(CONFIG.js, { twine1 : false }), // combine and minify the app JS
+			cssSource : compileStyles(CONFIG.css),                        // combine and minify the app CSS
+
+			postProcess(sourceString) {
+				// Load the output format.
+				let output = require(`./${_path.normalize(this.build.json)}`); // relative path must be prefixed ('./')
+
+				// Merge data into the output format.
+				output = Object.assign(output, {
+					description : output.description.replace(
+						/(['"`])\{\{BUILD_VERSION_MAJOR\}\}\1/g,
+						() => this.version.major
+					),
+					version : this.version.toString(),
+					source  : sourceString
+				});
+
+				// Wrap the output in the `storyFormat()` function.
+				output = JSON.stringify(output);
+
+				return output;
+			}
+		});
+
+		// Process the files that simply need copied into the build.
+		projectCopy(CONFIG.twineyardclient.copy);
 	}
 
 	// Update the build ID.

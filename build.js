@@ -130,7 +130,7 @@ const CONFIG = {
 	twineyardclient : {
 		build : {
 			src  : 'src/templates/twineyard/html.tpl',
-			dest : 'build/twineyard-client/sugarcube-2/format.js',
+			dest : 'build/twineyard-client/sugarcube-2/format.json',
 			json : 'src/templates/twineyard/config.json',
 			echo : true,
 		},
@@ -148,7 +148,7 @@ const CONFIG = {
 	twineyardserver : {
 		build : {
 			src  : 'src/templates/twineyard/html.tpl',
-			dest : 'build/twineyard-server/sugarcube-2/format.js',
+			dest : 'build/twineyard-server/sugarcube-2/format.json',
 			json : 'src/templates/twineyard/config.json',
 			echo : true,
 		},

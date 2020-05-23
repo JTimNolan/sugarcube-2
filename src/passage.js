@@ -69,7 +69,8 @@ var Passage = (() => { // eslint-disable-line no-unused-vars, no-var
 			Object.defineProperties(this, {
 				// Passage title/ID.
 				title : {
-					value : Util.unescape(title)
+					value : Util.unescape(title),
+					enumerable: true,
 				},
 
 				// Passage data element (within the story data element; i.e. T1: '[tiddler]', T2: 'tw-passagedata').

@@ -3130,6 +3130,7 @@
 		isAsync : true,
 		tags    : ['next'],
 		timers  : new Set(),
+		clientOnly: true,
 
 		handler() {
 			if (this.args.length === 0) {

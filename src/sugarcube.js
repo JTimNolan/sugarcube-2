@@ -8,7 +8,7 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro, Passage,
-	       Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar, Util, Visibility, Wikifier
+	       Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar, Util, Visibility, Wikifier, Twineyard
 */
 /* eslint-disable no-var */
 
@@ -220,6 +220,7 @@ jQuery(() => {
 				UI,
 				UIBar,
 				DebugBar,
+				Twineyard,
 				Util,
 				Visibility,
 				Wikifier,

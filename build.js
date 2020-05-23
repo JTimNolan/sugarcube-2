@@ -202,6 +202,8 @@ if (_opt.options.build) {
 		die(`unknown Twine major version: ${_opt.options.build}; valid values: 1 or 2`);
 		break;
 	}
+} else {
+	_buildForTwineyard = true;
 }
 
 // build the project

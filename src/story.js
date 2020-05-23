@@ -6,7 +6,7 @@
 	Use of this source code is governed by a BSD 2-clause "Simplified" License, which may be found in the LICENSE file.
 
 ***********************************************************************************************************************/
-/* global Alert, Config, Passage, Scripting, StyleWrapper, Util, Wikifier */
+/* global Alert, Config, Passage, Scripting, State, StyleWrapper, Util, Wikifier */
 
 var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 	'use strict';
@@ -354,19 +354,33 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 	/*******************************************************************************************************************
 		Passage Functions.
 	*******************************************************************************************************************/
+	function text2node(text){
+		var el = document.createElement("div");
+		el.innerHTML=text;
+		return el.firstChild;
+	}
 	function passagesAdd(passage) {
 		if (!(passage instanceof Passage)) {
-			throw new TypeError('Story.add passage parameter must be an instance of Passage');
+			if(passage.hasOwnProperty('content')){
+				passage.id = passage.id || 2;
+				passage.title = passage.title || "Passage"+passage.id;
+				passage = new Passage(passage.title,
+					text2node(`<tw-passagedata pid="${passage.id}" name="${Util.escape(passage.title)}">${Util.escape(passage.content)}</tw-passagedata>`)
+				);
+			} else {
+				throw new TypeError('Story.add passage parameter must be an instance of Passage');
+			}
 		}
 
 		const title = passage.title;
 
 		if (!_passages.hasOwnProperty(title)) {
 			_passages[title] = passage;
-			return true;
+			return passage;
 		}
 
-		return false;
+		if (DEBUG) { console.log(`[Story/passagesAdd(title: "${title}", passage already exists)]`); }
+		return {title};
 	}
 
 	function passagesHas(title) {
@@ -513,6 +527,14 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 		return results;
 	}
 
+	function passagesClearInactive(){
+		Object.keys(_passages).forEach(name => {
+			if(State.passage == name){
+				return;
+			}
+			delete passages[name];
+		});
+	}
 
 	/*******************************************************************************************************************
 		Module Exports.
@@ -536,6 +558,7 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 		getAllWidget     : { value : passagesGetAllWidget },
 		lookup           : { value : passagesLookup },
 		lookupWith       : { value : passagesLookupWith },
+		clearInactive    : { value : passagesClearInactive },
 
 		// Twineyard Mods
 		passages: { value: _passages, enumerable },

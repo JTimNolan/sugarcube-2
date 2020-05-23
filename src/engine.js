@@ -348,6 +348,13 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		return enginePlay(State.passage, true);
 	}
 
+	function engineRender(passage){
+		Story.clearInactive();
+		passage = Story.add(passage);
+		// TODO: PsuedoSegments so links, etc. aren't broken
+		return enginePlay(passage.title, true);
+	}
+
 	/*
 		Renders and displays the passage referenced by the given title, optionally without
 		adding a new moment to the history.
@@ -752,6 +759,7 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		forward     : { value : engineForward },
 		show        : { value : engineShow },
 		play        : { value : enginePlay },
+		render      : { value : engineRender },
 
 		/*
 			Legacy Functions.

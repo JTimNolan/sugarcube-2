@@ -8,7 +8,7 @@
 ***********************************************************************************************************************/
 /*
 	global Alert, Browser, Config, Dialog, Engine, Fullscreen, Has, LoadScreen, SimpleStore, L10n, Macro, Passage,
-	       Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar, Util, Visibility, Wikifier, Twineyard
+	       Save, Scripting, Setting, SimpleAudio, State, Story, UI, UIBar, DebugBar, Util, Visibility, Wikifier
 */
 /* eslint-disable no-var */
 
@@ -128,6 +128,10 @@ jQuery(() => {
 			document.normalize();
 		}
 
+		if(typeof Client != 'undefined'){
+			Client.init();
+		}
+
 		// Load the story data (must be done before most anything else).
 		Story.load();
 
@@ -220,7 +224,6 @@ jQuery(() => {
 				UI,
 				UIBar,
 				DebugBar,
-				Twineyard,
 				Util,
 				Visibility,
 				Wikifier,

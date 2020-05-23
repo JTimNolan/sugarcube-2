@@ -127,21 +127,39 @@ const CONFIG = {
 			}
 		]
 	},
-	twineyard : {
+	twineyardclient : {
 		build : {
 			src  : 'src/templates/twineyard/html.tpl',
-			dest : 'build/twineyard/sugarcube-2/format.js',
+			dest : 'build/twineyard-client/sugarcube-2/format.js',
 			json : 'src/templates/twineyard/config.json',
 			echo : true,
 		},
 		copy : [
 			{
 				src  : 'icon.svg',
-				dest : 'build/twineyard/sugarcube-2/icon.svg'
+				dest : 'build/twineyard-client/sugarcube-2/icon.svg'
 			},
 			{
 				src  : 'LICENSE',
-				dest : 'build/twineyard/sugarcube-2/LICENSE'
+				dest : 'build/twineyard-client/sugarcube-2/LICENSE'
+			}
+		]
+	},
+	twineyardserver : {
+		build : {
+			src  : 'src/templates/twineyard/html.tpl',
+			dest : 'build/twineyard-server/sugarcube-2/format.js',
+			json : 'src/templates/twineyard/config.json',
+			echo : true,
+		},
+		copy : [
+			{
+				src  : 'icon.svg',
+				dest : 'build/twineyard-server/sugarcube-2/icon.svg'
+			},
+			{
+				src  : 'LICENSE',
+				dest : 'build/twineyard-server/sugarcube-2/LICENSE'
 			}
 		]
 	}
@@ -181,7 +199,8 @@ if (_opt.options.es6 && !_opt.options.unminified) {
 
 let _buildForTwine1 = false;
 let _buildForTwine2 = false;
-let _buildForTwineyard = false;
+let _buildForTwineyardServer = false;
+let _buildForTwineyardClient = false;
 
 // build selection
 if (_opt.options.build) {
@@ -195,7 +214,16 @@ if (_opt.options.build) {
 		break;
 
 	case 'twineyard':
-		_buildForTwineyard = true;
+		_buildForTwineyardServer = true;
+		_buildForTwineyardClient = true;
+		break;
+
+	case 'twineyard-client':
+		_buildForTwineyardClient = true;
+		break;
+
+	case 'twineyard-server':
+		_buildForTwineyardServer = true;
 		break;
 
 	default:
@@ -203,7 +231,8 @@ if (_opt.options.build) {
 		break;
 	}
 } else {
-	_buildForTwineyard = true;
+	_buildForTwineyardServer = true;
+	_buildForTwineyardClient = true;
 }
 
 // build the project
@@ -292,12 +321,13 @@ if (_opt.options.build) {
 	}
 
 	// Build for Twineyard
-	if (_buildForTwineyard && CONFIG.twineyard) {
-		log('\nBuilding Twineyard version:');
+	if (_buildForTwineyardClient) {
+		log('\nBuilding Twineyard client version:');
+		CONFIG.js.main.splice(-1, 0, 'src/client.js');
 
 		// Process the story format templates and write the outfiles.
 		projectBuild({
-			build     : CONFIG.twineyard.build,
+			build     : CONFIG.twineyardclient.build,
 			version   : version, // eslint-disable-line object-shorthand
 			libSource : assembleLibraries(CONFIG.libs),                   // combine the libraries
 			appSource : compileJavaScript(CONFIG.js, { twine1 : false }), // combine and minify the app JS
@@ -325,7 +355,44 @@ if (_opt.options.build) {
 		});
 
 		// Process the files that simply need copied into the build.
-		projectCopy(CONFIG.twineyard.copy);
+		projectCopy(CONFIG.twineyardclient.copy);
+	}
+
+	// Build for Twineyard
+	if (_buildForTwineyardServer) {
+		log('\nBuilding Twineyard server version:');
+
+		// Process the story format templates and write the outfiles.
+		projectBuild({
+			build     : CONFIG.twineyardserver.build,
+			version   : version, // eslint-disable-line object-shorthand
+			libSource : assembleLibraries(CONFIG.libs),                   // combine the libraries
+			appSource : compileJavaScript(CONFIG.js, { twine1 : false }), // combine and minify the app JS
+			cssSource : compileStyles(CONFIG.css),                        // combine and minify the app CSS
+
+			postProcess(sourceString) {
+				// Load the output format.
+				let output = require(`./${_path.normalize(this.build.json)}`); // relative path must be prefixed ('./')
+
+				// Merge data into the output format.
+				output = Object.assign(output, {
+					description : output.description.replace(
+						/(['"`])\{\{BUILD_VERSION_MAJOR\}\}\1/g,
+						() => this.version.major
+					),
+					version : this.version.toString(),
+					source  : sourceString
+				});
+
+				// Wrap the output in the `storyFormat()` function.
+				output = JSON.stringify(output);
+
+				return output;
+			}
+		});
+
+		// Process the files that simply need copied into the build.
+		projectCopy(CONFIG.twineyardserver.copy);
 	}
 
 	// Update the build ID.

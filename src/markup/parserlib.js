@@ -1621,7 +1621,7 @@
 						}
 					}
 					else if(typeof Client != 'undefined'){
-						el.classList.addClass('link-internal');
+						el.classList.add('link-internal');
 					}
 					else {
 						el.classList.add('link-broken');
@@ -1877,7 +1877,7 @@
 						}
 					}
 					else if(typeof Client != 'undefined'){
-						el.classList.addClass('link-internal');
+						el.classList.add('link-internal');
 					}
 					else {
 						el.classList.add('link-broken');

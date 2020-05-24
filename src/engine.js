@@ -690,7 +690,9 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 		// Update the last play time.
 		_lastPlay = Util.now();
 
-		Story.clearInactive();
+		if(typeof Client != 'undefined'){
+			Story.clearInactive();
+		}
 
 		return passageEl;
 	}

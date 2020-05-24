@@ -942,6 +942,9 @@
 						$link.addClass('link-visited');
 					}
 				}
+				else if(typeof Client != 'undefined'){
+					$link.addClass('link-internal');
+				}
 				else {
 					$link.addClass('link-broken');
 				}

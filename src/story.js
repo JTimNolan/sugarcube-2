@@ -379,6 +379,7 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 		}
 
 		if (DEBUG) { console.log(`[Story/passagesAdd(title: "${title}", passage already exists)]`); }
+		_passages[title] = passage;
 		return {title};
 	}
 

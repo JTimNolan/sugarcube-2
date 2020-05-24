@@ -274,7 +274,7 @@ var Wikifier = (() => { // eslint-disable-line no-unused-vars, no-var
 						$link.addClass('link-visited');
 					}
 				}
-				else if(!!Client){
+				else if(typeof Client != 'undefined'){
 					$link.addClass('link-internal');
 				}
 				else {

@@ -1620,8 +1620,8 @@
 							el.classList.add('link-visited');
 						}
 					}
-					else if(!!Client){
-						$link.addClass('link-internal');
+					else if(typeof Client != 'undefined'){
+						el.classList.addClass('link-internal');
 					}
 					else {
 						el.classList.add('link-broken');
@@ -1876,8 +1876,8 @@
 							el.classList.add('link-visited');
 						}
 					}
-					else if(!!Client){
-						$link.addClass('link-internal');
+					else if(typeof Client != 'undefined'){
+						el.classList.addClass('link-internal');
 					}
 					else {
 						el.classList.add('link-broken');

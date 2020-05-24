@@ -349,18 +349,22 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	function engineRender(passage){
-		Story.clearInactive();
 		passage = Story.add(passage);
 		// TODO: PsuedoSegments so links, etc. aren't broken
-		return enginePlay(passage.title, true);
+		return enginePlay(passage.title, true, true);
 	}
 
 	/*
 		Renders and displays the passage referenced by the given title, optionally without
 		adding a new moment to the history.
 	*/
-	function enginePlay(title, noHistory) {
+	function enginePlay(title, noHistory, skipRemote = false) {
 		if (DEBUG) { console.log(`[Engine/enginePlay(title: "${title}", noHistory: ${noHistory})]`); }
+
+		if(!skipRemote && typeof Client != 'undefined' && title != 'transition'){
+			Client.sendInput('play', title);
+			return enginePlay('transition', true);
+		}
 
 		let passageTitle = title;
 
@@ -685,6 +689,8 @@ var Engine = (() => { // eslint-disable-line no-unused-vars, no-var
 
 		// Update the last play time.
 		_lastPlay = Util.now();
+
+		Story.clearInactive();
 
 		return passageEl;
 	}

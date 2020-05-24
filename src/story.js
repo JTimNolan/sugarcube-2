@@ -364,9 +364,8 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 			if(passage.hasOwnProperty('content')){
 				passage.id = passage.id || 2;
 				passage.title = passage.title || "Passage"+passage.id;
-				passage = new Passage(passage.title,
-					text2node(`<tw-passagedata pid="${passage.id}" name="${Util.escape(passage.title)}">${Util.escape(passage.content)}</tw-passagedata>`)
-				);
+				let html = text2node(`<tw-passagedata pid="${passage.id}" name="${Util.escape(passage.title)}">${Util.escape(passage.content)}</tw-passagedata>`);
+				passage = new Passage(passage.title, html);
 			} else {
 				throw new TypeError('Story.add passage parameter must be an instance of Passage');
 			}
@@ -528,12 +527,19 @@ var Story = (() => { // eslint-disable-line no-unused-vars, no-var
 	}
 
 	function passagesClearInactive(){
+		if(typeof Client != 'undefined'){
+			return false;
+		}
 		Object.keys(_passages).forEach(name => {
-			if(State.passage == name){
+			if(
+				State.passage == name
+				|| _passages[name] == '__transition'
+			){
 				return;
 			}
-			delete passages[name];
+			delete _passages[name];
 		});
+		return State.passage;
 	}
 
 	/*******************************************************************************************************************

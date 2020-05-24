@@ -60,6 +60,8 @@ var State = (() => { // eslint-disable-line no-unused-vars, no-var
 	function stateRestore() {
 		if (DEBUG) { console.log('[State/stateRestore()]'); }
 
+		return false;
+
 		/*
 			Attempt to restore an active session.
 		*/

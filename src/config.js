@@ -41,13 +41,13 @@ var Config = (() => { // eslint-disable-line no-unused-vars, no-var
 	let _passagesTransitionOut;
 
 	// Saves settings.
-	let _savesAutoload;
-	let _savesAutosave;
+	let _savesAutoload  = false;
+	let _savesAutosave  = false;
 	let _savesId        = 'untitled-story';
-	let _savesIsAllowed;
-	let _savesOnLoad;
-	let _savesOnSave;
-	let _savesSlots     = 8;
+	let _savesIsAllowed = false;
+	let _savesOnLoad    = false;
+	let _savesOnSave    = false;
+	let _savesSlots     = 0;
 	let _savesVersion;
 
 	// UI settings.

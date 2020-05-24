@@ -1620,6 +1620,9 @@
 							el.classList.add('link-visited');
 						}
 					}
+					else if(!!Client){
+						$link.addClass('link-internal');
+					}
 					else {
 						el.classList.add('link-broken');
 					}
@@ -1872,6 +1875,9 @@
 						if (Config.addVisitedLinkClass && State.hasPlayed(passage)) {
 							el.classList.add('link-visited');
 						}
+					}
+					else if(!!Client){
+						$link.addClass('link-internal');
 					}
 					else {
 						el.classList.add('link-broken');

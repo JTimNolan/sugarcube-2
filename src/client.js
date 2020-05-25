@@ -4,7 +4,7 @@ var Client = (() => {
     let socket = null;
 
     function init(){
-        const socketUrl = (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + window.location.hostname + (window.location.port ? ':'+window.location.port : '') + '/socket'
+        const socketUrl = (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + window.location.hostname + (window.location.port ? ':'+window.location.port : '') + '/story/{{STORY_IFID}}/socket'
         socket = new WebSocket(socketUrl);
         socket.onopen = () => {};
         socket.onmessage = (e) => {
